@@ -1,32 +1,31 @@
 name: Build and Test .NET Project
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [push, pull_request]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
+    
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '6.0.x' # replace with your desired .NET version
+        dotnet-version: '5.0.x'
 
-    - name: Restore NuGet packages
+    - name: Restore dependencies
       run: dotnet restore
 
     - name: Build
       run: dotnet build --configuration Release
 
-    - name: Run unit tests
-      run: dotnet test --logger "console;verbosity=detailed" --no-restore
+    - name: Run Unit Tests
+      run: dotnet test --logger "trx;LogFileName=test_results.xml"
 
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v1
+      with:
+        files: '**/test_results.xml'
+        format: VSTest
