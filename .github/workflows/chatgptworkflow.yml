@@ -16,16 +16,16 @@ jobs:
     - name: Install .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.x # Updated to use .NET 6.0
+        dotnet-version: 5.0.x
 
     - name: Build and Test
       id: build-and-test
       run: |
         dotnet build
-        dotnet test --logger "trx;LogFileName=test_results.xml"
+        dotnet vstest **/bin/Debug/*.dll /logger:trx
 
     - name: Publish Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
       with:
-        files: '**/test_results.xml'
+        files: '**/*.trx'
         format: VSTest
