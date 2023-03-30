@@ -1,4 +1,4 @@
-name: .NET Build and Test
+name: .NET 6.0 Build and Test
 
 on:
   push:
@@ -16,13 +16,13 @@ jobs:
     - name: Install .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
 
     - name: Build and Test
-      id: build-and-test
-      run: |
-        dotnet build
-        dotnet vstest **/bin/Debug/*.dll /logger:trx
+      run: dotnet test --logger "trx"
 
     - name: Publish Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
